@@ -1,0 +1,134 @@
+---
+title: "Glyph-Maps-Test"
+author: "Maliny Po"
+format: html
+editor: visual
+---
+
+```{r setup, include= FALSE}
+knitr::opts_chunk$set(echo = FALSE, warning = FALSE, message = FALSE)
+```
+
+
+# Glyph map for `cubble package`
+
+A descriptive title of the project that you want to work on
+
+# About Me
+
+Description of your programming experience, attained education, university and study programme that you're currently studying, etc. (a short CV would be ideal) Link to a portfolio of projects that you have worked on (e.g. a GitHub profile or a personal website) Your knowledge of Rust, since most projects will probably require at least some Rust knowledge Your existing open-source contribution experience. If you have already contributed to some open-source repositories, make sure to include a link to these contributions in your proposal! Your preferred time zone (for communicating with the mentor(s)) Contact information
+
+# Tests
+
+### Easy: Run the glyph map examples 
+
+```{r libraries}
+# Load the library
+library(cubble)
+library(ggplot2)
+library(tidyverse)
+library(knitr)
+```
+
+
+```{r example}
+# Run the glyph map example
+print_p <- GGally::print_if_interactive
+
+# basic glyph map with reference line and box---------------
+p <- ggplot(data = GGally::nasa,
+       aes(x_major = long, x_minor = day,
+           y_major = lat, y_minor = surftemp)) +
+  geom_glyph_box() +
+  geom_glyph_line() +
+  geom_glyph() +
+  theme_bw()
+
+print_p(p) # output from print_p doesn't show when rendered into HTML
+```
+
+![Geom Glyph Example](image/geom_glyph_example.png)
+
+### Medium: Create an example to be used as a glyph on a map
+
+```{r subset}
+# Define bounds for Central America
+xlim <- c(-112, -58) # Longitude bounds for Central America
+ylim <- c(-19.5, 35) # Latitude bounds for Central America
+
+
+# Subset for observations in 2000
+climate_data <- GGally::nasa |>
+  filter(lubridate::year(date) == 2000)
+```
+
+```{r basemap}
+# Base map with geom_roster displaying the Ozone value
+base_plot <- ggplot(climate_data, aes(x = long, y = lat)) +
+  geom_raster(aes(fill = ozone)) + # Adjust 'size' as needed
+  borders("world", fill="grey7", alpha = 0.3) +
+  scale_fill_gradientn(colors = c("#0000FFFF","#FFFFFFFF","#FF0000FF")) +
+  labs(title = "Spatial Dynamics of Ozone and Surface Temperature Across 
+South America, 2000",
+       subtitle = "Ozone Levels Visualized by Intensity on a Geom-Raster Overlay",
+       x = "Longitude", y = "Latitude",
+       color = "Surface Temp") + # Add a simple world map as background
+  coord_fixed(xlim = xlim, ylim = ylim) 
+
+```
+
+```{r function}
+# Set up
+
+## Function to create a time series plot glyph for each grid
+plot_glyph <- function(data) {
+  data |>
+    ggplot(aes(x = date, y = surftemp)) +
+    geom_line(group = 1, color = "black") +
+    theme_void() +
+    theme(panel.border = element_blank())
+}
+
+## Find unique combination of longitude and latitude
+unique_grid <- unique(climate_data$id) 
+
+## Value for horizontal, vertical location of raster
+x_size <- 1 
+y_size <- 1
+
+```
+
+```{r glyph_map, echo=TRUE}
+# Add Glyph 
+for (i in unique_grid) {
+  
+  data <- climate_data |>
+    filter(id == i)
+  
+  lat_val <-  data$lat[1] # Latitude at grid i
+  long_val <- data$long[1] # Longitude at grid i
+  
+  # Create the glyph using the custom `plot_glyph` function
+  p <- plot_glyph(data)
+  
+  # Add the glyph as an annotation
+  base_plot <- base_plot + 
+    annotation_custom(ggplotGrob(p), 
+                      xmin = long_val - x_size, xmax = long_val + x_size,
+                      ymin = lat_val - y_size, ymax = lat_val + y_size)
+}
+
+# Print the Glyph Map
+print(base_plot) 
+```
+To illustrate the dynamic interplay between ozone levels and surface temperature across South America in 2000, I constructed a glyph map with a two-fold visual approach. First, I established a base map utilizing geom_raster to display ozone values, overlaid with the continent's silhouette for geographical context. This raster layer employs a gradient color scheme, transitioning from blue to red, to represent the varying intensities of ozone concentration.
+
+The second layer of visualization introduces the glyph element: a series of line graphs representing the time series of surface temperatures for each unique grid location. I crafted these glyphs with a custom function, plot_glyph, designed to generate a line plot for the given data slice.
+
+For each grid point, identified by its unique id, I extracted the corresponding latitude and longitude values and deployed the plot_glyph function to produce a miniaturized time series plot. This glyph encapsulates the temporal pattern of surface temperatures throughout the year 2000.
+
+I then meticulously positioned each glyph onto the base map using annotation_custom, aligning them with their geographic counterparts and fine-tuning their spatial footprint through xmin, xmax, ymin, and ymax parameters. The resulting visualization is a composite map that fuses the static backdrop of ozone distribution with the dynamic narrative of temperature fluctuations, offering a nuanced perspective on environmental patterns over space and time.
+
+### HARD: Small change to `geom_glyph` in the cubble package and create a pull request
+My pull request can be found at: [link]().
+
