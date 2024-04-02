@@ -1,14 +1,13 @@
 ---
 title: "Glyph-Maps-Test"
 author: "Maliny Po"
-format: html
+format: pdf
 editor: visual
 ---
 
 ```{r setup, include= FALSE}
 knitr::opts_chunk$set(echo = FALSE, warning = FALSE, message = FALSE)
 ```
-
 
 # About Me
 
@@ -22,6 +21,9 @@ Curiosity drives me to learn and explore; I've developed skills in R, Python, an
 
 ### Easy: Run the glyph map examples
 
+
+
+
 ```{r libraries}
 # Load the library
 library(cubble)
@@ -30,7 +32,7 @@ library(tidyverse)
 library(knitr)
 ```
 
-```{r example}
+```{r example, echo = TRUE}
 # Run the glyph map example
 print_p <- GGally::print_if_interactive
 
@@ -43,10 +45,13 @@ p <- ggplot(data = GGally::nasa,
   geom_glyph() +
   theme_bw()
 
-print_p(p) # output from print_p doesn't show when rendered into HTML
+print_p(p) # output from print_p doesn't show when rendered into PDF
 ```
 
-![Geom Glyph Example](image/geom_glyph_example.png)
+```{r, out.width = "400px"}
+knitr::include_graphics("image/geom_glyph_example.png")
+```
+
 
 ### Medium: Create an example to be used as a glyph on a map
 
@@ -69,7 +74,7 @@ base_plot <- ggplot(climate_data, aes(x = long, y = lat)) +
   scale_fill_gradientn(colors = c("#0000FFFF","#FFFFFFFF","#FF0000FF")) +
   labs(title = "Spatial Dynamics of Ozone and Surface Temperature Across 
 South America, 2000",
-       subtitle = "Ozone Levels Visualized by Intensity on a Geom-Raster Overlay",
+       subtitle = "Ozone Levels Visualized by Geom-Raster Overlay",
        x = "Longitude", y = "Latitude",
        color = "Surface Temp") + # Add a simple world map as background
   coord_fixed(xlim = xlim, ylim = ylim) 
@@ -135,21 +140,14 @@ My pull request can be found at: [link](https://github.com/huizezhang-sherry/cub
 
 ## References
 
-Wickham H, Averick M, Bryan J, Chang W, McGowan LD, François R, Grolemund G, Hayes A, Henry L, Hester J, Kuhn M, Pedersen TL,
-  Miller E, Bache SM, Müller K, Ooms J, Robinson D, Seidel DP, Spinu V, Takahashi K, Vaughan D, Wilke C, Woo K, Yutani H (2019).
-  “Welcome to the tidyverse.” _Journal of Open Source Software_, *4*(43), 1686. doi:10.21105/joss.01686
-  <https://doi.org/10.21105/joss.01686>.
-  
-Zhang H, Cook D, Laa U, Langrené N, Menéndez P. _cubble: A Vector Spatio-Temporal Data Structure for Data Analysis_.
-  https://github.com/huizezhang-sherry/cubble, https://huizezhang-sherry.github.io/cubble/.
-  
+Wickham H, Averick M, Bryan J, Chang W, McGowan LD, François R, Grolemund G, Hayes A, Henry L, Hester J, Kuhn M, Pedersen TL, Miller E, Bache SM, Müller K, Ooms J, Robinson D, Seidel DP, Spinu V, Takahashi K, Vaughan D, Wilke C, Woo K, Yutani H (2019). “Welcome to the tidyverse.” *Journal of Open Source Software*, *4*(43), 1686. doi:10.21105/joss.01686 <https://doi.org/10.21105/joss.01686>.
+
+Zhang H, Cook D, Laa U, Langrené N, Menéndez P. *cubble: A Vector Spatio-Temporal Data Structure for Data Analysis*. https://github.com/huizezhang-sherry/cubble, https://huizezhang-sherry.github.io/cubble/.
+
 H. Wickham. ggplot2: Elegant Graphics for Data Analysis. Springer-Verlag New York, 2016.
 
-Xie Y (2023). _knitr: A General-Purpose Package for Dynamic Report Generation in R_. R package version 1.45,
-  <https://yihui.org/knitr/>.
+Xie Y (2023). *knitr: A General-Purpose Package for Dynamic Report Generation in R*. R package version 1.45, <https://yihui.org/knitr/>.
 
-  Yihui Xie (2015) Dynamic Documents with R and knitr. 2nd edition. Chapman and Hall/CRC. ISBN 978-1498716963
+Yihui Xie (2015) Dynamic Documents with R and knitr. 2nd edition. Chapman and Hall/CRC. ISBN 978-1498716963
 
-  Yihui Xie (2014) knitr: A Comprehensive Tool for Reproducible Research in R. In Victoria Stodden, Friedrich Leisch and Roger D.
-  Peng, editors, Implementing Reproducible Computational Research. Chapman and Hall/CRC. ISBN 978-1466561595
-
+Yihui Xie (2014) knitr: A Comprehensive Tool for Reproducible Research in R. In Victoria Stodden, Friedrich Leisch and Roger D. Peng, editors, Implementing Reproducible Computational Research. Chapman and Hall/CRC. ISBN 978-1466561595
