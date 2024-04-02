@@ -72,8 +72,8 @@ base_plot <- ggplot(climate_data, aes(x = long, y = lat)) +
   geom_raster(aes(fill = ozone)) + # Adjust 'size' as needed
   borders("world", fill="grey7", alpha = 0.3) +
   scale_fill_gradientn(colors = c("#0000FFFF","#FFFFFFFF","#FF0000FF")) +
-  labs(title = "Spatial Dynamics of Ozone and Surface Temperature Across 
-South America, 2000",
+  labs(title = "Spatial Dynamics of Ozone and Surface 
+Temperature Across South America, 2000",
        subtitle = "Ozone Levels Visualized by Geom-Raster Overlay",
        x = "Longitude", y = "Latitude",
        color = "Surface Temp") + # Add a simple world map as background
